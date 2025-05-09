@@ -158,6 +158,32 @@ namespace DET_Coursework.Controllers
 
             match = Regex.Match(text, fullNamePattern);
 
+            if (!match.Success)
+            {
+                title = title.Replace("- ", "");
+                regexTitle = title
+                .ToUpper()
+                .Replace(" ", @"\s+");
+
+                fullNamePattern = $@"[\s\S]*?{regexTitle}\s*[\s\S]*?";
+                n = 0;
+
+                foreach (var name in surnames)
+                {
+                    fullNamePattern += $@"(?<authors{n}>";
+
+                    for (int j = 0; j < nameCountForPerson[n]; j++)
+                    {
+                        fullNamePattern += @$"[A-Za-z'-]+\s+";
+                    }
+
+                    fullNamePattern += $@"{name})[\s\S]*?";
+                    n++;
+                }
+
+                match = Regex.Match(text, fullNamePattern);
+            }
+
             List<string> authorsFullNames = new List<string>();
 
             for (int i = 0; i < nameCountForPerson.Length; i++)
