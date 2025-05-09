@@ -12,6 +12,12 @@ using static iText.Kernel.Pdf.Colorspace.PdfSpecialCs;
 using System.Text.RegularExpressions;
 using System.Xml;
 using iText.StyledXmlParser.Jsoup.Internal;
+using VDS.RDF.Query.Datasets;
+using VDS.RDF.Update;
+using VDS.RDF;
+using VDS.RDF.Parsing;
+using VDS.RDF.Writing;
+using System.Globalization;
 
 namespace DET_Coursework.Controllers
 {
@@ -38,13 +44,104 @@ namespace DET_Coursework.Controllers
 
 
         [HttpPost]
-        public IActionResult Refine(PublicationInfo info, string PdfBytesBase64)
+        public IActionResult Add(PublicationInfo info, string PdfBytesBase64)
         {
-            var fileBytes = Convert.FromBase64String(PdfBytesBase64);
-            var refined = ExtractPublicationInfo(fileBytes);
-            ViewBag.PdfBytes = fileBytes;
-            return View("Result", refined);
+
+            AddToOntology(info);
+
+            ViewBag.Message = "Додано запис в онтологію";
+            ViewBag.PdfBytes = Convert.FromBase64String(PdfBytesBase64);
+            return View("Result", info);
         }
+
+        private void AddToOntology(PublicationInfo info)
+        {
+            // Шлях до файлу з онтологією
+            string path = "Наукові_публікації.ttl";
+
+            // Завантажуємо граф
+            IGraph graph = new Graph();
+            FileLoader.Load(graph, path);
+
+            // Створюємо оновлювану базу даних
+            InMemoryDataset dataset = new InMemoryDataset(graph);
+            ISparqlUpdateProcessor updateProcessor = new LeviathanUpdateProcessor(dataset);
+
+            int authorCount = info.Authors.Count;
+            double pagePerAuthor = (double)info.PageCount / (double)authorCount;
+            pagePerAuthor = Math.Round(pagePerAuthor, 1);
+            string pagePerAuthorString = pagePerAuthor.ToString(CultureInfo.InvariantCulture);
+
+            var builder = new StringBuilder($@"
+            PREFIX onto: <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#>
+            PREFIX inst: <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+            INSERT DATA {{
+              inst:Наукова_Публікація_{info.Title.Replace(" ", "_").Replace("'", "").Replace(", ", "").Replace(",", "")}
+                rdf:type onto:Наукова_Публікація ;
+                onto:назва ""{info.Title}"" ;
+                onto:дата_публікації ""{info.PublicationDate.ToString("yyyy-MM-ddTHH:mm:ss")}""^^xsd:dateTime ;
+                onto:кількість_сторінок {info.PageCount} ;
+                onto:кількість_авторів {authorCount} ;
+                onto:кількість_сторінок_на_автора ""{pagePerAuthorString}""^^xsd:double ;
+                onto:мова ""{info.Language}"" ;
+                onto:маєАвтора {string.Join(" , ", info.Authors.Select(name => $"inst:Науковець_{name.Replace(" ", "_").Replace("'", "")}"))} ;
+                onto:опубліковано_в inst:Журнал_{info.Journal.Replace(" ", "_").Replace("'", "").Replace(", ", "").Replace(",", "")} ;
+                onto:належить_до_галузі_знань {string.Join(" , ", info.Fields.Select(field => $"onto:Галузь_{field.Replace(" ", "_").Replace("'", "")}"))} ;
+                onto:містить_ключове_слово {string.Join(" , ", info.Keywords.Select(keyword => $"inst:Ключове_слово_{keyword.Replace(" ", "_").Replace("'", "")}"))} .
+
+                inst:Журнал_{info.Journal.Replace(" ", "_").Replace("'", "").Replace(", ", "").Replace(",", "")}
+                    rdf:type onto:Журнал ;
+                    onto:назва ""{info.Journal}"" .
+            
+            ");
+
+            foreach (var author in info.Authors)
+            {
+                builder.AppendLine($@"
+                    inst:Науковець_{author.Replace(" ", "_").Replace("'", "")}
+                        rdf:type onto:Науковець ;
+                        onto:ПІБ ""{author}"" .
+                
+                ");
+            }
+
+            foreach (var field in info.Fields )
+            {
+                builder.AppendLine($@"
+                    onto:Галузь_{field.Replace(" ", "_").Replace("'", "")}
+                        rdf:type onto:Галузь_знань ;
+                        onto:назва ""{field}"" .
+                
+                ");
+            }
+
+            foreach (var keyword  in info.Keywords)
+            {
+                builder.AppendLine($@"
+                    inst:Ключове_слово_{keyword.Replace(" ", "_").Replace("'", "")}
+                        rdf:type onto:Ключове_cлово ;
+                        onto:назва ""{keyword}"" .
+                
+                ");
+            }
+
+            builder.AppendLine("}");
+
+            string insertQuery = builder.ToString();
+
+            // Парсимо та виконуємо оновлення
+            SparqlUpdateParser parser = new SparqlUpdateParser();
+            SparqlUpdateCommandSet updateCommands = parser.ParseFromString(insertQuery);
+            updateProcessor.ProcessCommandSet(updateCommands);
+
+            // Зберігаємо оновлений граф
+            CompressingTurtleWriter writer = new CompressingTurtleWriter();
+            writer.Save(graph, path);
+        }
+
 
         private PublicationInfo ExtractPublicationInfo(byte[] fileBytes)
         {
@@ -86,16 +183,41 @@ namespace DET_Coursework.Controllers
 
             var publication = new PublicationInfo();
 
-            publication.Title = title;
-            publication.Authors = authors;
+            publication.Title = title.Replace('’', '\'');
+            publication.Authors = authors
+                .Select(a => a.Replace('’', '\''))
+                .ToList();
+
             publication.PublicationDate = publicationDate;
-            publication.Journal = journalName;
+
+            publication.Journal = journalName.Replace('’', '\'');
             publication.Language = language;
             publication.PageCount = pageCount;
-            publication.Keywords = keywords;
-            publication.Fields = fields;
-            publication.Type = "Стаття";
+            publication.Keywords = keywords
+                .Select(k => k.Replace('’', '\''))
+                .ToList();
 
+            publication.Fields = fields
+                .Select(f => f.Replace('’', '\''))
+                .ToList();
+
+            if ((double)pageCount / (double)authors.Count >= 90)
+            {
+                publication.Type = "Дисертація";
+            }
+            else if ((double)pageCount / (double)authors.Count >= 25)
+            {
+                publication.Type = "Монографія";
+            }
+            else if ((double)pageCount > 3)
+            {
+                publication.Type = "Стаття";
+            }
+            else
+            {
+                publication.Type = "Тези_конференції";
+            }
+            
             return publication;
         }
 
@@ -240,6 +362,7 @@ namespace DET_Coursework.Controllers
 
             List<string> keywords = keywordsLine
                 .Split(new string[] { ", ", "," }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(k => k.Trim())
                 .ToList();
 
             return keywords;

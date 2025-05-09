@@ -1,69 +1,80 @@
 ﻿@model PublicationInfo
 
-<form asp-action="Refine" asp-controller="Home" method="post">
-    <table>
-        <tr>
-            <th>Назва:</th>
-            <td>@Model.Title</td>
-        </tr>
-        <tr>
-            <th>Автори:</th>
-            <td>
-                @if (Model.Authors != null && Model.Authors.Count > 0)
-                {
-                    @(string.Join(", ", Model.Authors))
-                }
-                else
-                {
-                    <span>Немає даних про авторів</span>
-                }
-            </td>
-        </tr>
-        <tr>
-            <th>Дата публікації:</th>
-            <td>@Model.PublicationDate.ToShortDateString()</td> @* Можливо, варто форматувати дату *@
-        </tr>
-        <tr>
-            <th>Журнал:</th>
-            <td>@Model.Journal</td>
-        </tr>
-        <tr>
-            <th>Мова:</th>
-            <td>@Model.Language</td>
-        </tr>
-        <tr>
-            <th>Сторінок:</th>
-            <td>@Model.PageCount</td>
-        </tr>
-        <tr>
-            <th>Тип публікації:</th>
-            <td>@Model.Type</td>
-        </tr>
-        <tr>
-            <th>Галузь науки:</th>
-            <td>
-                @if (Model.Fields != null && Model.Fields.Count > 0)
-                {
-                    @(string.Join(", ", Model.Fields))
-                }
-                else
-                {
-                    <span>Немає даних про галузі</span>
-                }
-            </td>
-        </tr>
-        <tr>
-            <th>Ключові слова:</th>
-            <td>
-                @if (Model.Keywords != null && Model.Keywords.Count > 0)
-                {
-                    @(string.Join(", ", Model.Keywords))
-                }
-                else
-                {
-                    <span>Немає даних про ключові слова</span>
-                }
-            </td>
-        </tr>
-    </table>
-</form>
+@{
+    string pdfBase64 = ViewBag.PdfBytes != null
+        ? Convert.ToBase64String((byte[])ViewBag.PdfBytes)
+        : string.Empty;
+
+    bool isSuccess = ViewBag.Message != null;
+}
+
+@if (isSuccess)
+{
+    <script>
+        // Автоматичне перенаправлення через 3 секунди
+        setTimeout(function () {
+            window.location.href = '@Url.Action("Index", "Home")';
+        }, 3000);
+    </script>
+
+    <div class="alert alert-success" role="alert">
+        @ViewBag.Message
+    </div>
+}
+
+<!-- Відображення даних публікації -->
+<table class="table table-striped mt-3">
+    <tr><th>Назва:</th><td>@Model.Title</td></tr>
+    <tr>
+        <th>Автори:</th>
+        <td>@(Model.Authors?.Any() == true ? string.Join(", ", Model.Authors) : "Немає даних про авторів")</td>
+    </tr>
+    <tr><th>Дата публікації:</th><td>@Model.PublicationDate.ToShortDateString()</td></tr>
+    <tr><th>Журнал:</th><td>@Model.Journal</td></tr>
+    <tr><th>Мова:</th><td>@Model.Language</td></tr>
+    <tr><th>Сторінок:</th><td>@Model.PageCount</td></tr>
+    <tr><th>Тип публікації:</th><td>@Model.Type</td></tr>
+    <tr>
+        <th>Галузь науки:</th>
+        <td>@(Model.Fields?.Any() == true ? string.Join(", ", Model.Fields) : "Немає даних про галузі")</td>
+    </tr>
+    <tr>
+        <th>Ключові слова:</th>
+        <td>@(Model.Keywords?.Any() == true ? string.Join(", ", Model.Keywords) : "Немає даних про ключові слова")</td>
+    </tr>
+</table>
+
+@if (!isSuccess)
+{
+    <form asp-action="Add" asp-controller="Home" method="post">
+        <input type="hidden" name="PdfBytesBase64" value="@pdfBase64" />
+        <input type="hidden" name="Title" value="@Model.Title" />
+
+        @foreach (var author in Model.Authors ?? Enumerable.Empty<string>())
+        {
+            <input type="hidden" name="Authors" value="@author" />
+        }
+
+        <input type="hidden" name="PublicationDate" value="@Model.PublicationDate.ToString("o")" />
+        <input type="hidden" name="Journal" value="@Model.Journal" />
+        <input type="hidden" name="Language" value="@Model.Language" />
+        <input type="hidden" name="PageCount" value="@Model.PageCount" />
+        <input type="hidden" name="Type" value="@Model.Type" />
+
+        @foreach (var fieldItem in Model.Fields ?? Enumerable.Empty<string>())
+        {
+            <input type="hidden" name="Fields" value="@fieldItem" />
+        }
+
+        @foreach (var kw in Model.Keywords ?? Enumerable.Empty<string>())
+        {
+            <input type="hidden" name="Keywords" value="@kw" />
+        }
+
+        <button type="submit" class="btn btn-primary">Додати в онтологію</button>
+    </form>
+}
+else
+{
+    <a href="@Url.Action("Index", "Home")" class="btn btn-success">Повернутись до завантаження</a>
+}
