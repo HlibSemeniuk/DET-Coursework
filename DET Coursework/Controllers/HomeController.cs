@@ -78,7 +78,8 @@ namespace DET_Coursework.Controllers
 
             string language = DetermineLanguage(allText);
 
-            List<string> keywords = FindKeywords(allText);
+            string firstAuthorName = authors.FirstOrDefault();
+            List<string> keywords = FindKeywords(allText, firstAuthorName);
 
             List<string> fields = DetermineFields(journalName);
 
@@ -225,15 +226,20 @@ namespace DET_Coursework.Controllers
                 return "English";
         }
 
-        private List<string> FindKeywords(string text)
+        private List<string> FindKeywords(string text, string firstAuthorName)
         {
-            string keywordsPattern = @"(?:Keywords\s+)(?<keywords>.*?)\s\s+";
+            var names = firstAuthorName.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            // ѕеретворюЇмо список ≥мен в строку дл€ використанн€ в регул€рному вираз≥
+            var namesPattern = string.Join("|", names.Select(Regex.Escape));
+
+            string keywordsPattern = @$"(?:Keywords\s+)(?<keywords>.*?)(?=\s+(INTRODUCTION|{namesPattern})\b)";
             
             Match match = Regex.Match(text, keywordsPattern);
             string keywordsLine = match.Groups["keywords"].Value;
 
             List<string> keywords = keywordsLine
-                .Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new string[] { ", ", "," }, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
 
             return keywords;
