@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Завантажити PDF";
+}
+
+<form asp-action="Index" asp-controller="Home" method="post" enctype="multipart/form-data">
+    <input type="file" name="pdfFile" accept="application/pdf" />
+    <button type="submit">Завантажити PDF</button>
+</form>
+

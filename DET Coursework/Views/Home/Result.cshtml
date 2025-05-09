@@ -1,0 +1,69 @@
+﻿@model PublicationInfo
+
+<form asp-action="Refine" asp-controller="Home" method="post">
+    <table>
+        <tr>
+            <th>Назва:</th>
+            <td>@Model.Title</td>
+        </tr>
+        <tr>
+            <th>Автори:</th>
+            <td>
+                @if (Model.Authors != null && Model.Authors.Count > 0)
+                {
+                    @(string.Join(", ", Model.Authors))
+                }
+                else
+                {
+                    <span>Немає даних про авторів</span>
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Дата публікації:</th>
+            <td>@Model.PublicationDate.ToShortDateString()</td> @* Можливо, варто форматувати дату *@
+        </tr>
+        <tr>
+            <th>Журнал:</th>
+            <td>@Model.Journal</td>
+        </tr>
+        <tr>
+            <th>Мова:</th>
+            <td>@Model.Language</td>
+        </tr>
+        <tr>
+            <th>Сторінок:</th>
+            <td>@Model.PageCount</td>
+        </tr>
+        <tr>
+            <th>Тип публікації:</th>
+            <td>@Model.Type</td>
+        </tr>
+        <tr>
+            <th>Галузь науки:</th>
+            <td>
+                @if (Model.Fields != null && Model.Fields.Count > 0)
+                {
+                    @(string.Join(", ", Model.Fields))
+                }
+                else
+                {
+                    <span>Немає даних про галузі</span>
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Ключові слова:</th>
+            <td>
+                @if (Model.Keywords != null && Model.Keywords.Count > 0)
+                {
+                    @(string.Join(", ", Model.Keywords))
+                }
+                else
+                {
+                    <span>Немає даних про ключові слова</span>
+                }
+            </td>
+        </tr>
+    </table>
+</form>
