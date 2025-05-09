@@ -183,8 +183,8 @@ namespace DET_Coursework.Controllers
 
         private string FindJournalName(string text, string title)
         {
-            string journalPattern = @$"(?:{title.Replace(" ", @"\s+") + '.'})\s*[\s\S]*?(?<journal>(.*?)),";
-           
+            string journalPattern = @$"(?:{title.Replace(" ", @"\s+") + '.'})\s*[\s\S]*?(?<journal>(.*?)),\s*\d+";
+
             Match match = Regex.Match(text, journalPattern);
             string journalName = match.Groups["journal"].Value;
 
