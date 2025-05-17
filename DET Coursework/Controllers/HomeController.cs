@@ -173,7 +173,6 @@ namespace DET_Coursework.Controllers
            return insertQuery;
         }
 
-
         private string FormatForOntology(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -198,8 +197,6 @@ namespace DET_Coursework.Controllers
             return sb.ToString();
         }
 
-
-
         private PublicationInfo ExtractPublicationInfo(byte[] fileBytes)
         {
             using var reader = new PdfReader(new MemoryStream(fileBytes));
@@ -223,41 +220,32 @@ namespace DET_Coursework.Controllers
                 .ToArray();
 
             string title = FindTitle(allText);
-
             List<string> authors = FindAuthors(allText, title);
-
             DateTime publicationDate = FindPublicationDate(allText);
-
             string journalName = FindJournalName(allText, title);
-
             string language = DetermineLanguage(allText);
-
             string firstAuthorName = authors.FirstOrDefault();
             List<string> keywords = FindKeywords(allText, firstAuthorName);
-
             List<string> fields = DetermineFields(journalName);
 
+            var publication = BuildPublicationInfo(title, authors, publicationDate, journalName, language, keywords, fields, pageCount);
 
+            return publication;
+        }
+
+        private PublicationInfo BuildPublicationInfo(string title, List<string> authors, DateTime publicationDate, string journalName, string language, List<string> keywords, List<string> fields, int pageCount)
+        {
             var publication = new PublicationInfo();
 
             publication.Title = title.Replace('Т', '\'');
-            publication.Authors = authors
-                .Select(a => a.Replace('Т', '\''))
-                .ToList();
-
+            publication.Authors = authors.Select(a => a.Replace('Т', '\'')).ToList();
             publication.PublicationDate = publicationDate;
-
             publication.Journal = journalName.Replace('Т', '\'');
             publication.Language = language;
             publication.PageCount = pageCount;
-            publication.Keywords = keywords
-                .Select(k => k.Replace('Т', '\''))
-                .ToList();
+            publication.Keywords = keywords.Select(k => k.Replace('Т', '\'')).ToList();
+            publication.Fields = fields.Select(f => f.Replace('Т', '\'')).ToList();
 
-            publication.Fields = fields
-                .Select(f => f.Replace('Т', '\''))
-                .ToList();
-            
             int authorCount = authors.Count;
             double pagePerAuthor = pageCount / (double)authorCount;
             pagePerAuthor = Math.Round(pagePerAuthor, 1);
@@ -272,16 +260,14 @@ namespace DET_Coursework.Controllers
             else if (pagePerAuthor >= 25)
             {
                 publication.Type = "ћонограф≥€";
-            }
-            else if ((double)pageCount > 3)
+            } 
+            else if (pageCount > 3)
             {
                 publication.Type = "—татт€";
             }
             else
-            {
                 publication.Type = "“ези_конференц≥њ";
-            }
-            
+
             return publication;
         }
 
