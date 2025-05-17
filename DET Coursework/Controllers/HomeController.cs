@@ -1,23 +1,25 @@
-using System.Diagnostics;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Linq;
 using DET_Coursework.Models;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Pdf.Canvas.Parser;
-using Microsoft.AspNetCore.Mvc;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.StyledXmlParser.Jsoup.Internal;
 using Microsoft.AspNetCore.Components.Forms;
-using static iText.Kernel.Pdf.Colorspace.PdfSpecialCs;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Reflection.PortableExecutable;
+using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
-using iText.StyledXmlParser.Jsoup.Internal;
-using VDS.RDF.Query.Datasets;
-using VDS.RDF.Update;
 using VDS.RDF;
 using VDS.RDF.Parsing;
+using VDS.RDF.Query;
+using VDS.RDF.Query.Datasets;
+using VDS.RDF.Update;
 using VDS.RDF.Writing;
-using System.Globalization;
+using static iText.Kernel.Pdf.Colorspace.PdfSpecialCs;
 
 namespace DET_Coursework.Controllers
 {
@@ -27,8 +29,27 @@ namespace DET_Coursework.Controllers
         public IActionResult Index() => View();
 
         [HttpPost]
-        public IActionResult Index(IFormFile pdfFile)
+        public async Task<IActionResult> Index(IFormFile pdfFile, string ontologyPath)
         {
+
+            if (!string.IsNullOrEmpty(ontologyPath))
+            {
+                using var httpClient = new HttpClient();
+                var content = new StringContent(ontologyPath, Encoding.UTF8, "text/plain");
+                var response = await httpClient.PostAsync("http://localhost:8081/path", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    string error = await response.Content.ReadAsStringAsync();
+                    return StatusCode((int)response.StatusCode, $"Java server error: {response.StatusCode}. Details: {error}");
+                }
+            }
+
+
             if (pdfFile?.Length > 0 && pdfFile.ContentType == "application/pdf")
             {
                 using var ms = new MemoryStream();
@@ -39,6 +60,9 @@ namespace DET_Coursework.Controllers
                 return View("Result", info);
             }
             ModelState.AddModelError("", "Будь ласка, завантажте дійсний PDF-файл.");
+
+           ViewData["OntologyPath"] = ontologyPath;
+
             return View();
         }
 
@@ -54,23 +78,38 @@ namespace DET_Coursework.Controllers
             return View("Result", info);
         }
 
-        private void AddToOntology(PublicationInfo info)
+        private async void AddToOntology(PublicationInfo info)
         {
-            // Шлях до файлу з онтологією
-            string path = "Наукові_публікації.ttl";
+            string insertQuery = BuildInsertQuery(info);
 
-            // Завантажуємо граф
-            IGraph graph = new Graph();
-            FileLoader.Load(graph, path);
+            //виконуємо оновлення
+            using var client = new HttpClient();
+            var content = new StringContent(insertQuery, Encoding.UTF8, "text/plain");
 
-            // Створюємо оновлювану базу даних
-            InMemoryDataset dataset = new InMemoryDataset(graph);
-            ISparqlUpdateProcessor updateProcessor = new LeviathanUpdateProcessor(dataset);
+            try
+            {
+                var response = await client.PostAsync("http://localhost:8081/query", content);
 
-            int authorCount = info.Authors.Count;
-            double pagePerAuthor = (double)info.PageCount / (double)authorCount;
-            pagePerAuthor = Math.Round(pagePerAuthor, 1);
-            string pagePerAuthorString = pagePerAuthor.ToString(CultureInfo.InvariantCulture);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Java server error: {(int)response.StatusCode} {response.ReasonPhrase}. Details: {error}");
+                }
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Java server response: " + responseBody);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception occurred: " + ex.Message);
+                // Можна кидати далі або логувати
+                throw;
+            }
+        }
+
+        private string BuildInsertQuery(PublicationInfo info)
+        {
+            string pagePerAuthorString = info.PagePerAuthor.ToString(CultureInfo.InvariantCulture);
 
             var builder = new StringBuilder($@"
             PREFIX onto: <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#>
@@ -84,7 +123,7 @@ namespace DET_Coursework.Controllers
                 onto:назва ""{info.Title}"" ;
                 onto:дата_публікації ""{info.PublicationDate.ToString("yyyy-MM-ddTHH:mm:ss")}""^^xsd:dateTime ;
                 onto:кількість_сторінок {info.PageCount} ;
-                onto:кількість_авторів {authorCount} ;
+                onto:кількість_авторів {info.AuthorCount} ;
                 onto:кількість_сторінок_на_автора ""{pagePerAuthorString}""^^xsd:double ;
                 onto:мова ""{info.Language}"" ;
                 onto:маєАвтора {string.Join(" , ", info.Authors.Select(name => $"inst:Науковець_{name.Replace(" ", "_").Replace("'", "")}"))} ;
@@ -108,7 +147,7 @@ namespace DET_Coursework.Controllers
                 ");
             }
 
-            foreach (var field in info.Fields )
+            foreach (var field in info.Fields)
             {
                 builder.AppendLine($@"
                     onto:Галузь_{field.Replace(" ", "_").Replace("'", "")}
@@ -118,7 +157,7 @@ namespace DET_Coursework.Controllers
                 ");
             }
 
-            foreach (var keyword  in info.Keywords)
+            foreach (var keyword in info.Keywords)
             {
                 builder.AppendLine($@"
                     inst:Ключове_слово_{keyword.Replace(" ", "_").Replace("'", "")}
@@ -132,16 +171,8 @@ namespace DET_Coursework.Controllers
 
             string insertQuery = builder.ToString();
 
-            // Парсимо та виконуємо оновлення
-            SparqlUpdateParser parser = new SparqlUpdateParser();
-            SparqlUpdateCommandSet updateCommands = parser.ParseFromString(insertQuery);
-            updateProcessor.ProcessCommandSet(updateCommands);
-
-            // Зберігаємо оновлений граф
-            CompressingTurtleWriter writer = new CompressingTurtleWriter();
-            writer.Save(graph, path);
+           return insertQuery;
         }
-
 
         private PublicationInfo ExtractPublicationInfo(byte[] fileBytes)
         {
@@ -200,12 +231,19 @@ namespace DET_Coursework.Controllers
             publication.Fields = fields
                 .Select(f => f.Replace('’', '\''))
                 .ToList();
+            
+            int authorCount = authors.Count;
+            double pagePerAuthor = pageCount / (double)authorCount;
+            pagePerAuthor = Math.Round(pagePerAuthor, 1);
 
-            if ((double)pageCount / (double)authors.Count >= 90)
+            publication.AuthorCount = authorCount;
+            publication.PagePerAuthor = pagePerAuthor;
+
+            if (pageCount >= 90)
             {
                 publication.Type = "Дисертація";
             }
-            else if ((double)pageCount / (double)authors.Count >= 25)
+            else if (pagePerAuthor >= 25)
             {
                 publication.Type = "Монографія";
             }

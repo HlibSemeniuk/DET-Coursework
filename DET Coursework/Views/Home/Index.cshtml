@@ -3,7 +3,15 @@
 }
 
 <form asp-action="Index" asp-controller="Home" method="post" enctype="multipart/form-data">
-    <input type="file" name="pdfFile" accept="application/pdf" />
+    <label for="ontologyPath">Шлях до онтології (TTL файл):</label><br />
+    <input type="text" id="ontologyPath" name="ontologyPath"
+           placeholder="Наприклад: D:\MyProjects\ontology.ttl"
+           style="width: 100%; max-width: 400px;"
+           value="@ViewData["OntologyPath"]" />
+
+
+    <label for="pdfFile">Виберіть PDF файл для завантаження:</label><br />
+    <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" /><br /><br />
+
     <button type="submit">Завантажити PDF</button>
 </form>
-

@@ -11,10 +11,10 @@
 @if (isSuccess)
 {
     <script>
-        // Автоматичне перенаправлення через 3 секунди
+        // Автоматичне перенаправлення через 5 секунд
         setTimeout(function () {
             window.location.href = '@Url.Action("Index", "Home")';
-        }, 3000);
+        }, 5000);
     </script>
 
     <div class="alert alert-success" role="alert">
@@ -29,6 +29,8 @@
         <th>Автори:</th>
         <td>@(Model.Authors?.Any() == true ? string.Join(", ", Model.Authors) : "Немає даних про авторів")</td>
     </tr>
+    <tr><th>Кількість авторів:</th><td>@Model.AuthorCount</td></tr>
+    <tr><th>Сторінок на одного автора:</th><td>@Model.PagePerAuthor.ToString("F2")</td></tr>
     <tr><th>Дата публікації:</th><td>@Model.PublicationDate.ToShortDateString()</td></tr>
     <tr><th>Журнал:</th><td>@Model.Journal</td></tr>
     <tr><th>Мова:</th><td>@Model.Language</td></tr>
@@ -43,6 +45,7 @@
         <td>@(Model.Keywords?.Any() == true ? string.Join(", ", Model.Keywords) : "Немає даних про ключові слова")</td>
     </tr>
 </table>
+
 
 @if (!isSuccess)
 {
@@ -71,9 +74,13 @@
             <input type="hidden" name="Keywords" value="@kw" />
         }
 
+        <input type="hidden" name="AuthorCount" value="@Model.AuthorCount" />
+        <input type="hidden" name="PagePerAuthor" value="@Model.PagePerAuthor.ToString()" />
+
         <button type="submit" class="btn btn-primary">Додати в онтологію</button>
     </form>
 }
+
 else
 {
     <a href="@Url.Action("Index", "Home")" class="btn btn-success">Повернутись до завантаження</a>
