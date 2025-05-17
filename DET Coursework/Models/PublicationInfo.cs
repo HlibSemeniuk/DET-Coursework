@@ -9,5 +9,8 @@
     public string Type { get; set; }
     public List<string> Fields { get; set; }
     public List<string> Keywords { get; set; }
+
+    public int AuthorCount { get; set; }
+    public double PagePerAuthor { get; set; }
  
 }
