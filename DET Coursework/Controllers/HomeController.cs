@@ -102,7 +102,6 @@ namespace DET_Coursework.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine("Exception occurred: " + ex.Message);
-                // Можна кидати далі або логувати
                 throw;
             }
         }
@@ -118,7 +117,7 @@ namespace DET_Coursework.Controllers
             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
             INSERT DATA {{
-              inst:Наукова_Публікація_{info.Title.Replace(" ", "_").Replace("'", "").Replace(", ", "").Replace(",", "")}
+              inst:Наукова_Публікація_{FormatForOntology(info.Title)}
                 rdf:type onto:Наукова_Публікація ;
                 onto:назва ""{info.Title}"" ;
                 onto:дата_публікації ""{info.PublicationDate.ToString("yyyy-MM-ddTHH:mm:ss")}""^^xsd:dateTime ;
@@ -126,12 +125,12 @@ namespace DET_Coursework.Controllers
                 onto:кількість_авторів {info.AuthorCount} ;
                 onto:кількість_сторінок_на_автора ""{pagePerAuthorString}""^^xsd:double ;
                 onto:мова ""{info.Language}"" ;
-                onto:маєАвтора {string.Join(" , ", info.Authors.Select(name => $"inst:Науковець_{name.Replace(" ", "_").Replace("'", "")}"))} ;
-                onto:опубліковано_в inst:Журнал_{info.Journal.Replace(" ", "_").Replace("'", "").Replace(", ", "").Replace(",", "")} ;
-                onto:належить_до_галузі_знань {string.Join(" , ", info.Fields.Select(field => $"onto:Галузь_{field.Replace(" ", "_").Replace("'", "")}"))} ;
-                onto:містить_ключове_слово {string.Join(" , ", info.Keywords.Select(keyword => $"inst:Ключове_слово_{keyword.Replace(" ", "_").Replace("'", "")}"))} .
+                onto:маєАвтора {string.Join(" , ", info.Authors.Select(name => $"inst:Науковець_{FormatForOntology(name)}"))} ;
+                onto:опубліковано_в inst:Журнал_{FormatForOntology(info.Journal)} ;
+                onto:належить_до_галузі_знань {string.Join(" , ", info.Fields.Select(field => $"onto:Галузь_{FormatForOntology(field)}"))} ;
+                onto:містить_ключове_слово {string.Join(" , ", info.Keywords.Select(keyword => $"inst:Ключове_слово_{FormatForOntology(keyword)}"))} .
 
-                inst:Журнал_{info.Journal.Replace(" ", "_").Replace("'", "").Replace(", ", "").Replace(",", "")}
+                inst:Журнал_{FormatForOntology(info.Journal)}
                     rdf:type onto:Журнал ;
                     onto:назва ""{info.Journal}"" .
             
@@ -140,7 +139,7 @@ namespace DET_Coursework.Controllers
             foreach (var author in info.Authors)
             {
                 builder.AppendLine($@"
-                    inst:Науковець_{author.Replace(" ", "_").Replace("'", "")}
+                    inst:Науковець_{FormatForOntology(author)}
                         rdf:type onto:Науковець ;
                         onto:ПІБ ""{author}"" .
                 
@@ -150,7 +149,7 @@ namespace DET_Coursework.Controllers
             foreach (var field in info.Fields)
             {
                 builder.AppendLine($@"
-                    onto:Галузь_{field.Replace(" ", "_").Replace("'", "")}
+                    onto:Галузь_{FormatForOntology(field)}
                         rdf:type onto:Галузь_знань ;
                         onto:назва ""{field}"" .
                 
@@ -160,7 +159,7 @@ namespace DET_Coursework.Controllers
             foreach (var keyword in info.Keywords)
             {
                 builder.AppendLine($@"
-                    inst:Ключове_слово_{keyword.Replace(" ", "_").Replace("'", "")}
+                    inst:Ключове_слово_{FormatForOntology(keyword)}
                         rdf:type onto:Ключове_cлово ;
                         onto:назва ""{keyword}"" .
                 
@@ -173,6 +172,33 @@ namespace DET_Coursework.Controllers
 
            return insertQuery;
         }
+
+
+        private string FormatForOntology(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            var sb = new StringBuilder(input.Length);
+            foreach (char c in input)
+            {
+                switch (c)
+                {
+                    case ' ':
+                        sb.Append('_');
+                        break;
+                    case '\'':
+                    case ',':
+                        break;
+                    default:
+                        sb.Append(c);
+                        break;
+                }
+            }
+            return sb.ToString();
+        }
+
+
 
         private PublicationInfo ExtractPublicationInfo(byte[] fileBytes)
         {
