@@ -1,0 +1,61 @@
+﻿@model IEnumerable<PublicationInfo>
+
+@{
+    ViewData["Title"] = "Усі наукові публікації";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary">@ViewData["Title"]</h2>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            ⬅ Повернутись
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Наразі не знайдено жодної публікації в онтології.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>Назва</th>
+                        <th>Тип</th>
+                        <th>Дата</th>
+                        <th>Стор.</th>
+                        <th>Авторів</th>
+                        <th>Стор./авт.</th>
+                        <th>Мова</th>
+                        <th>Автори</th>
+                        <th>Журнал</th>
+                        <th>Галузі</th>
+                        <th>Ключ. слова</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model)
+                    {
+                        <tr>
+                            <td><strong>@p.Title</strong></td>
+                            <td>@p.Type</td>
+                            <td>@p.PublicationDate.ToString("yyyy-MM-dd")</td>
+                            <td class="text-center">@p.PageCount</td>
+                            <td class="text-center">@p.AuthorCount</td>
+                            <td class="text-center">@p.PagePerAuthor.ToString("F2")</td>
+                            <td>@p.Language</td>
+                            <td>@string.Join(", ", p.Authors ?? Enumerable.Empty<string>())</td>
+                            <td>@p.Journal</td>
+                            <td>@string.Join(", ", p.Fields ?? Enumerable.Empty<string>())</td>
+                            <td>@string.Join(", ", p.Keywords ?? Enumerable.Empty<string>())</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
