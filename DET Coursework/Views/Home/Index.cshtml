@@ -2,16 +2,51 @@
     ViewData["Title"] = "Завантажити PDF";
 }
 
-<form asp-action="Index" asp-controller="Home" method="post" enctype="multipart/form-data">
-    <label for="ontologyPath">Шлях до онтології (TTL файл):</label><br />
-    <input type="text" id="ontologyPath" name="ontologyPath"
-           placeholder="Наприклад: D:\MyProjects\ontology.ttl"
-           style="width: 100%; max-width: 400px;"
-           value="@ViewData["OntologyPath"]" />
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Завантаження PDF-файлу</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Index" asp-controller="Home" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="ontologyPath" class="form-label">Шлях до онтології (TTL файл):</label>
+                            <input type="text" id="ontologyPath" name="ontologyPath" class="form-control"
+                                   placeholder="Наприклад: D:\MyProjects\ontology.ttl"
+                                   value="@ViewData["OntologyPath"]" />
+                        </div>
 
-    <label for="pdfFile">Виберіть PDF файл для завантаження:</label><br />
-    <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" /><br /><br />
+                        <div class="mb-3">
+                            <label for="pdfFile" class="form-label">Оберіть PDF-файл для завантаження:</label>
+                            <input type="file" id="pdfFile" name="pdfFile" class="form-control"
+                                   accept="application/pdf" />
+                        </div>
 
-    <button type="submit">Завантажити PDF</button>
-</form>
+                        <button type="submit" class="btn btn-success w-100">📄 Завантажити PDF</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Перегляд усіх наукових публікацій</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Home" asp-action="AllPublications" method="post">
+                        <div class="mb-3">
+                            <label for="ontologyPath2" class="form-label">Шлях до онтології (TTL файл):</label>
+                            <input type="text" id="ontologyPath2" name="ontologyPath" class="form-control"
+                                   placeholder="Наприклад: D:\MyProjects\ontology.ttl"
+                                   value="@ViewData["OntologyPath"]" />
+                        </div>
+                        <button type="submit" class="btn btn-outline-dark w-100">📚 Переглянути всі публікації</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
