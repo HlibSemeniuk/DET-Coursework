@@ -1,0 +1,28 @@
+[rule_monograph:
+  (?pub rdf:type <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#Наукова_Публікація>)
+  (?pub <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#кількість_сторінок_на_автора> ?pagesPerAuthor)
+  greaterThan(?pagesPerAuthor, 24.99)
+  ->
+  (?pub rdf:type <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#Монографія>)
+]
+
+[rule_dissertation:
+  (?pub rdf:type <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#Наукова_Публікація>)
+  (?pub <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#кількість_сторінок> ?pages)
+  (?pub <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#кількість_сторінок_на_автора> ?pagesPerAuthor)
+  greaterThan(?pages, 79.99)
+  lessThan(?pagesPerAuthor, 24.99)
+  ->
+  (?pub rdf:type <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#Дисертація>)
+]
+
+[rule_article:
+  (?pub rdf:type <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#Наукова_Публікація>)
+  (?pub <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#кількість_сторінок> ?pages)
+    (?pub <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#кількість_сторінок_на_автора> ?pagesPerAuthor)
+  lessThan(?pages, 79.99)
+  greaterThan(?pages, 3.99)
+  lessThan(?pagesPerAuthor, 24.99)
+  ->
+  (?pub rdf:type <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#Стаття>)
+]

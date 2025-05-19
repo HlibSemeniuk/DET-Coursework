@@ -1,0 +1,823 @@
+@prefix :      <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xml:   <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix untitled-ontology-2: <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+untitled-ontology-2:дата_конференції
+        a            owl:DatatypeProperty ;
+        rdfs:domain  untitled-ontology-2:Конференція ;
+        rdfs:range   xsd:dateTime .
+
+untitled-ontology-2:Ключове_Слово_Блокчейн
+        a           owl:NamedIndividual , untitled-ontology-2:Ключове_cлово ;
+        rdfs:label  "Ключове слово \"Блокчейн\""@uk .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Amir_Reza_Asadi>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Amir Reza Asadi" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_computer_vision>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "computer vision" .
+
+untitled-ontology-2:Журнал
+        a                 owl:Class ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a                     rdfs:Datatype ;
+                                                 owl:onDatatype        xsd:string ;
+                                                 owl:withRestrictions  ( [ xsd:pattern  ".{3,255}" ]
+                                                                       )
+                                               ] ;
+                            owl:onProperty     untitled-ontology-2:назва
+                          ] ;
+        owl:disjointWith  untitled-ontology-2:Ключове_cлово , untitled-ontology-2:Конференція , untitled-ontology-2:Наукова_Публікація , untitled-ontology-2:Науковець , untitled-ontology-2:Організація , untitled-ontology-2:Посилання , untitled-ontology-2:Рецензент .
+
+untitled-ontology-2:Посилання
+        a       owl:Class .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Наукова_Публікація_Digital_tessellation_for_geometry_learning_in_primary_school:_A_quasi-experimental_study>
+        a                              untitled-ontology-2:Наукова_Публікація , untitled-ontology-2:Стаття ;
+        untitled-ontology-2:дата_публікації
+                "2025-03-14T00:00:00"^^xsd:dateTime ;
+        untitled-ontology-2:кількість_авторів
+                3 ;
+        untitled-ontology-2:кількість_сторінок
+                31 ;
+        untitled-ontology-2:кількість_сторінок_на_автора
+                "10.3"^^xsd:double ;
+        untitled-ontology-2:маєАвтора  <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Serena_Madiai> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Stefano_Scippo> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Stefano_Cuomo> ;
+        untitled-ontology-2:мова       "English" ;
+        untitled-ontology-2:містить_ключове_слово
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_primary_school> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_quasi-_experimental_design> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_digital_teaching> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_tessellation> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_educational_technology> ;
+        untitled-ontology-2:назва      "Digital tessellation for geometry learning in primary school: A quasi-experimental study" ;
+        untitled-ontology-2:належить_до_галузі_знань
+                untitled-ontology-2:Галузь_IT_Освіта , untitled-ontology-2:Галузь_Педагогіка ;
+        untitled-ontology-2:опубліковано_в
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Journal_of_Information_Technology_Education:_Research> .
+
+untitled-ontology-2:Дисертація_Іваненко_Штучний_Інтелект
+        a                              owl:NamedIndividual ;
+        rdfs:label                     "Дисертація Іваненко Штучний інтелект"@uk ;
+        untitled-ontology-2:має_рецензента
+                untitled-ontology-2:Петренко_Марина ;
+        untitled-ontology-2:маєАвтора  untitled-ontology-2:Іваненко_Олександр .
+
+untitled-ontology-2:належить_до_галузі_знань
+        a            owl:ObjectProperty ;
+        rdfs:domain  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range   untitled-ontology-2:Галузь_знань .
+
+untitled-ontology-2:Конференція
+        a                 owl:Class ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a                     rdfs:Datatype ;
+                                                 owl:onDatatype        xsd:dateTime ;
+                                                 owl:withRestrictions  ( [ xsd:minInclusive  "1900-01-01T08:00:00Z"^^xsd:dateTime ]
+                                                                         [ xsd:maxInclusive  "2025-01-31T23:00:00Z"^^xsd:dateTime ]
+                                                                       )
+                                               ] ;
+                            owl:onProperty     untitled-ontology-2:дата_конференції
+                          ] ;
+        owl:disjointWith  untitled-ontology-2:Наукова_Публікація , untitled-ontology-2:Науковець , untitled-ontology-2:Організація , untitled-ontology-2:Посилання .
+
+untitled-ontology-2:ПІБ
+        a            owl:DatatypeProperty ;
+        rdfs:domain  untitled-ontology-2:Науковець ;
+        rdfs:range   xsd:string .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_artificial__neural_networks>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "artificial  neural networks" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_postgraduate_students>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "postgraduate students" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Наукова_Публікація_Optimizing_class_timing:_AI_driven_group_engagements_role_in_academic_success>
+        a                              untitled-ontology-2:Наукова_Публікація , untitled-ontology-2:Стаття ;
+        untitled-ontology-2:дата_публікації
+                "2025-02-19T00:00:00"^^xsd:dateTime ;
+        untitled-ontology-2:кількість_авторів
+                4 ;
+        untitled-ontology-2:кількість_сторінок
+                28 ;
+        untitled-ontology-2:кількість_сторінок_на_автора
+                "7"^^xsd:double ;
+        untitled-ontology-2:маєАвтора  <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Chakradhar_Pabba> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Sanjay_V_Hanji> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Sumanth_P_Desai> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_M_M_Munshi> ;
+        untitled-ontology-2:мова       "English" ;
+        untitled-ontology-2:містить_ключове_слово
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_artificial_intelligence> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_group_engagement> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_blended_learning> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_academic_performance> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_computer_vision> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_col-_laborative_learning> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_class_timing> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_SOR_Model> ;
+        untitled-ontology-2:назва      "Optimizing class timing: AI driven group engagement's role in academic success" ;
+        untitled-ontology-2:належить_до_галузі_знань
+                untitled-ontology-2:Галузь_Педагогіка , untitled-ontology-2:Галузь_IT_Освіта ;
+        untitled-ontology-2:опубліковано_в
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Journal_of_Information_Technology_Education:_Research> .
+
+untitled-ontology-2:Галузь_IT
+        a                          untitled-ontology-2:Галузь_знань ;
+        untitled-ontology-2:назва  "IT" .
+
+untitled-ontology-2:Дисертація_Петренко_Біохімія
+        a                              owl:NamedIndividual ;
+        rdfs:label                     "Дисертація Петренко Біохімія"@uk ;
+        untitled-ontology-2:має_рецензента
+                untitled-ontology-2:Костенко_Наталія ;
+        untitled-ontology-2:маєАвтора  untitled-ontology-2:Петренко_Марина .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Chakradhar_Pabba>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Chakradhar Pabba" .
+
+untitled-ontology-2:Дослідження_Оптимізація_Мереж_Журнал_ІТ_2024
+        a           owl:NamedIndividual ;
+        rdfs:label  "Дослідження \"Оптимізація мереж\" Журнал \"IT 2024\""@uk .
+
+untitled-ontology-2:кількість_сторінок
+        a                   owl:DatatypeProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( untitled-ontology-2:Галузь_знань untitled-ontology-2:Журнал untitled-ontology-2:Наукова_Публікація )
+                            ] ;
+        rdfs:range          xsd:int ;
+        rdfs:subPropertyOf  owl:topDataProperty .
+
+untitled-ontology-2:Коваленко_Оксана
+        a                         owl:NamedIndividual , untitled-ontology-2:Науковець ;
+        rdfs:label                "Коваленко Оксана"@uk ;
+        untitled-ontology-2:афілійовано_з
+                untitled-ontology-2:Інститут_Кібернетики_НАНУ ;
+        untitled-ontology-2:стаж  10 .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_generative_AI>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "generative AI" .
+
+untitled-ontology-2:Дисертація
+        a                owl:Class ;
+        rdfs:subClassOf  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  untitled-ontology-2:Журнал ;
+                           owl:onProperty     untitled-ontology-2:опубліковано_в
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "80"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:int ;
+                           owl:onProperty               untitled-ontology-2:кількість_сторінок
+                         ] .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2>
+        a       owl:Ontology .
+
+untitled-ontology-2:Тези_конференції
+        a                owl:Class ;
+        rdfs:subClassOf  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  untitled-ontology-2:Конференція ;
+                           owl:onProperty     untitled-ontology-2:представлено_на
+                         ] ;
+        rdfs:subClassOf  [ a                         owl:Restriction ;
+                           owl:onClass               untitled-ontology-2:Конференція ;
+                           owl:onProperty            untitled-ontology-2:представлено_на ;
+                           owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:maxQualifiedCardinality  "3"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:int ;
+                           owl:onProperty               untitled-ontology-2:кількість_сторінок
+                         ] .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_group_engagement>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "group engagement" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_COVID-19>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "COVID-19" .
+
+untitled-ontology-2:Інститут_Кібернетики_НАНУ
+        a           owl:NamedIndividual , untitled-ontology-2:Організація ;
+        rdfs:label  "Інститут Кібернетики НАНУ"@uk .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_SOR_Model>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "SOR Model" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_learning_experiences>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "learning experiences" .
+
+untitled-ontology-2:Галузь_Освіта
+        a                          untitled-ontology-2:Галузь_знань ;
+        untitled-ontology-2:назва  "Освіта" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Наукова_Публікація_Information_technology_in_healthcare:_A_systematic_literature_review>
+        a                              untitled-ontology-2:Стаття , untitled-ontology-2:Наукова_Публікація ;
+        untitled-ontology-2:дата_публікації
+                "2024-05-27T00:00:00"^^xsd:dateTime ;
+        untitled-ontology-2:кількість_авторів
+                3 ;
+        untitled-ontology-2:кількість_сторінок
+                18 ;
+        untitled-ontology-2:кількість_сторінок_на_автора
+                "6"^^xsd:double ;
+        untitled-ontology-2:маєАвтора  <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Amir_Reza_Asadi> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Hazem_Said> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Taiwo_Peter_Akinremi> ;
+        untitled-ontology-2:мова       "English" ;
+        untitled-ontology-2:містить_ключове_слово
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_eHealth> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_healthcare_industry> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_healthcare_information_systems> ;
+        untitled-ontology-2:назва      "Information technology in healthcare: A systematic literature review" ;
+        untitled-ontology-2:належить_до_галузі_знань
+                untitled-ontology-2:Галузь_Освіта , untitled-ontology-2:Галузь_Інформаційні_системи , untitled-ontology-2:Галузь_IT ;
+        untitled-ontology-2:опубліковано_в
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Issues_in_Informing_Science_and_Information_Technology> .
+
+untitled-ontology-2:Науковець
+        a                 owl:Class ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      untitled-ontology-2:афілійовано_з ;
+                            owl:someValuesFrom  untitled-ontology-2:Організація
+                          ] ;
+        rdfs:subClassOf   [ a                            owl:Restriction ;
+                            owl:maxQualifiedCardinality  "3"^^xsd:nonNegativeInteger ;
+                            owl:onClass                  untitled-ontology-2:Організація ;
+                            owl:onProperty               untitled-ontology-2:афілійовано_з
+                          ] ;
+        rdfs:subClassOf   [ a                         owl:Restriction ;
+                            owl:onDataRange           [ a                     rdfs:Datatype ;
+                                                        owl:onDatatype        xsd:string ;
+                                                        owl:withRestrictions  ( [ xsd:pattern  ".{3,255}" ]
+                                                                              )
+                                                      ] ;
+                            owl:onProperty            untitled-ontology-2:ПІБ ;
+                            owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                          ] ;
+        owl:disjointWith  untitled-ontology-2:Організація , untitled-ontology-2:Посилання .
+
+untitled-ontology-2:Огляд_Квантові_Обчислення_Журнал_Фізика_2024
+        a           owl:NamedIndividual ;
+        rdfs:label  "Огляд \"Квантові обчислення\" Журнал \"Фізика 2024\""@uk .
+
+untitled-ontology-2:дата_публікації
+        a            owl:DatatypeProperty ;
+        rdfs:domain  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range   xsd:dateTime .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Serena_Madiai>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Serena Madiai" .
+
+untitled-ontology-2:Огляд_Нейромережі_Журнал_Наука_2023
+        a           owl:NamedIndividual ;
+        rdfs:label  "Огляд \"Нейромережі\" Журнал \"Наука 2023\""@uk .
+
+untitled-ontology-2:Звіт_2023_Київський_Авіаційний_Інститут
+        a           owl:NamedIndividual ;
+        rdfs:label  "Звіт 2024 Київський Авіаційний Інститут"@uk .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_field_experiences>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "field experiences" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_educational_technology>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "educational technology" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_healthcare_information_systems>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "healthcare information systems" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_deep_learning>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "deep learning" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Stefano_Scippo>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Stefano Scippo" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_blended_learning>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "blended learning" .
+
+untitled-ontology-2:Стаття
+        a                owl:Class ;
+        rdfs:subClassOf  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  untitled-ontology-2:Журнал ;
+                           owl:onProperty     untitled-ontology-2:опубліковано_в
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "15"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:int ;
+                           owl:onProperty               untitled-ontology-2:кількість_сторінок
+                         ] .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_clinical_training>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "clinical training" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_tessellation>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "tessellation" .
+
+untitled-ontology-2:Руденко_Артем
+        a                         owl:NamedIndividual , untitled-ontology-2:Науковець ;
+        rdfs:label                "Руденко Артем"@uk ;
+        untitled-ontology-2:афілійовано_з
+                untitled-ontology-2:Київський_Авіаційний_Інститут ;
+        untitled-ontology-2:стаж  6 .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_quasi-_experimental_design>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "quasi- experimental design" .
+
+untitled-ontology-2:Конференція_AI2023
+        a           owl:NamedIndividual , untitled-ontology-2:Конференція ;
+        rdfs:label  "Конференція \"AI 2023\""@uk ;
+        untitled-ontology-2:дата_конференції
+                "2023-10-27T10:30:00Z"^^xsd:dateTime .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Наукова_Публікація_Learning-based_models_for_building_user_profiles_for_personalized_information_access>
+        a                              untitled-ontology-2:Наукова_Публікація , untitled-ontology-2:Стаття ;
+        untitled-ontology-2:дата_публікації
+                "2024-04-15T00:00:00"^^xsd:dateTime ;
+        untitled-ontology-2:кількість_авторів
+                1 ;
+        untitled-ontology-2:кількість_сторінок
+                21 ;
+        untitled-ontology-2:кількість_сторінок_на_автора
+                "21"^^xsd:double ;
+        untitled-ontology-2:маєАвтора  <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Sassi_Hidri> ;
+        untitled-ontology-2:мова       "English" ;
+        untitled-ontology-2:містить_ключове_слово
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_deep_learning> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_artificial__neural_networks> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_user_profile> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_convolutional_neural_networks> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_personalized_IR> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_recurrent_neural_networks> ;
+        untitled-ontology-2:назва      "Learning-based models for building user profiles for personalized information access" ;
+        untitled-ontology-2:належить_до_галузі_знань
+                untitled-ontology-2:Галузь_Менеджмент , untitled-ontology-2:Галузь_Управління_знаннями , untitled-ontology-2:Галузь_IT ;
+        untitled-ontology-2:опубліковано_в
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Interdisciplinary_Journal_of_Information_Knowledge_and_Management> .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Issues_in_Informing_Science_and_Information_Technology>
+        a                          untitled-ontology-2:Журнал ;
+        untitled-ontology-2:назва  "Issues in Informing Science and Information Technology" .
+
+untitled-ontology-2:Глущенко_Антоніна
+        a                         owl:NamedIndividual , untitled-ontology-2:Науковець ;
+        rdfs:label                "Глущенко Антоніна"@uk ;
+        untitled-ontology-2:афілійовано_з
+                untitled-ontology-2:Київський_Авіаційний_Інститут ;
+        untitled-ontology-2:стаж  15 .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_col-_laborative_learning>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "col- laborative learning" .
+
+untitled-ontology-2:рік_публікації
+        a            owl:DatatypeProperty ;
+        rdfs:domain  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range   xsd:int .
+
+untitled-ontology-2:Посилання_На_Статтю_Нейромережі
+        a           owl:NamedIndividual , untitled-ontology-2:Посилання ;
+        rdfs:label  "Посилання на статтю \"Нейромережі\""@uk .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Hazem_Said>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Hazem Said" .
+
+untitled-ontology-2:Журнал_Фізика_і_Технології
+        a           owl:NamedIndividual , untitled-ontology-2:Журнал ;
+        rdfs:label  "Журнал \"Фізика і Технології\""@uk .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Sassi_Hidri>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Sassi Hidri" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_practical_experience>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "practical experience" .
+
+untitled-ontology-2:маєАвтора
+        a            owl:ObjectProperty , owl:AsymmetricProperty , owl:IrreflexiveProperty ;
+        rdfs:domain  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range   untitled-ontology-2:Науковець .
+
+untitled-ontology-2:рецензував
+        a            owl:ObjectProperty , owl:FunctionalProperty , owl:IrreflexiveProperty ;
+        rdfs:domain  untitled-ontology-2:Науковець ;
+        rdfs:range   untitled-ontology-2:Наукова_Публікація .
+
+untitled-ontology-2:Монографія
+        a                owl:Class ;
+        rdfs:subClassOf  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  untitled-ontology-2:Журнал ;
+                           owl:onProperty     untitled-ontology-2:опубліковано_в
+                         ] ;
+        rdfs:subClassOf  [ a                            owl:Restriction ;
+                           owl:minQualifiedCardinality  "25"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange              xsd:int ;
+                           owl:onProperty               untitled-ontology-2:кількість_сторінок
+                         ] .
+
+untitled-ontology-2:Іваненко_Олександр
+        a                         owl:NamedIndividual , untitled-ontology-2:Науковець ;
+        rdfs:comment              "Well-known Ukrainian researcher in the field of condensed matter physics."@en , "Відомий український дослідник в галузі фізики конденсованих середовищ."@uk ;
+        rdfs:label                "Oleksandr Ivanenko"@en , "Іваненко Олександр"@uk ;
+        untitled-ontology-2:афілійовано_з
+                untitled-ontology-2:Інститут_Кібернетики_НАНУ ;
+        untitled-ontology-2:стаж  18 .
+
+untitled-ontology-2:Конференція_BigData2024
+        a           owl:NamedIndividual , untitled-ontology-2:Конференція ;
+        rdfs:label  "Конференція \"BIg Data 2024\""@uk ;
+        untitled-ontology-2:дата_конференції
+                "2024-07-21T12:00:00Z"^^xsd:dateTime .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_eHealth>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "eHealth" .
+
+untitled-ontology-2:процитовано_в
+        a       owl:ObjectProperty .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_artificial_intelligence>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "artificial intelligence" .
+
+untitled-ontology-2:Посилання_На_Дисертацію_Оптимізація
+        a           owl:NamedIndividual , untitled-ontology-2:Посилання ;
+        rdfs:label  "Посилання на дисертацію \"Оптимізація\""@uk .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Sumanth_P_Desai>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Sumanth P Desai" .
+
+untitled-ontology-2:Шевченко_Микита
+        a                         owl:NamedIndividual , untitled-ontology-2:Науковець ;
+        rdfs:label                "Шевченко Микита"@uk ;
+        untitled-ontology-2:афілійовано_з
+                untitled-ontology-2:Київський_Авіаційний_Інститут ;
+        untitled-ontology-2:стаж  2 .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Journal_of_Information_Technology_Education:_Research>
+        a                          untitled-ontology-2:Журнал ;
+        untitled-ontology-2:назва  "Journal of Information Technology Education: Research" .
+
+untitled-ontology-2:афілійовано_з
+        a            owl:ObjectProperty , owl:FunctionalProperty , owl:IrreflexiveProperty ;
+        rdfs:domain  untitled-ontology-2:Науковець ;
+        rdfs:range   untitled-ontology-2:Організація .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Taiwo_Peter_Akinremi>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Taiwo Peter Akinremi" .
+
+untitled-ontology-2:Дослідження_Генетичні_Алгоритми_Журнал_CS2023
+        a           owl:NamedIndividual ;
+        rdfs:label  "Дослідження \"Генетичні Алгоритми\" Журнал \"CS 2023\""@uk .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_digital_learning_literacies>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "digital learning literacies" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Наукова_Публікація_The_tutors_role_in_the_online_training_of_preservice_teachers:_Tutor_and_tutee_per-_spectives>
+        a                              untitled-ontology-2:Монографія , untitled-ontology-2:Наукова_Публікація ;
+        untitled-ontology-2:дата_публікації
+                "2022-04-15T00:00:00"^^xsd:dateTime ;
+        untitled-ontology-2:кількість_авторів
+                1 ;
+        untitled-ontology-2:кількість_сторінок
+                25 ;
+        untitled-ontology-2:кількість_сторінок_на_автора
+                "25"^^xsd:double ;
+        untitled-ontology-2:маєАвтора  <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Gila_Cohen_Zilka> ;
+        untitled-ontology-2:мова       "English" ;
+        untitled-ontology-2:містить_ключове_слово
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_practical_experience> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_e-readiness> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_preservice_teacher> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_field_experiences> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_COVID-19> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_21st_cen-_tury> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_clinical_training> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_digital_learning_literacies> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_online_teaching_practices> ;
+        untitled-ontology-2:назва      "The tutor's role in the online training of preservice teachers: Tutor and tutee per- spectives" ;
+        untitled-ontology-2:належить_до_галузі_знань
+                untitled-ontology-2:Галузь_Інформаційні_системи , untitled-ontology-2:Галузь_IT , untitled-ontology-2:Галузь_Освіта ;
+        untitled-ontology-2:опубліковано_в
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Issues_in_Informing_Science_and_Information_Technology> .
+
+untitled-ontology-2:опубліковано_в
+        a            owl:ObjectProperty , owl:FunctionalProperty , owl:AsymmetricProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( untitled-ontology-2:Дисертація untitled-ontology-2:Монографія untitled-ontology-2:Стаття )
+                     ] ;
+        rdfs:range   untitled-ontology-2:Журнал .
+
+untitled-ontology-2:кількість_авторів
+        a            owl:DatatypeProperty ;
+        rdfs:domain  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range   xsd:int .
+
+untitled-ontology-2:мова
+        a            owl:DatatypeProperty ;
+        rdfs:domain  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range   xsd:string .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_convolutional_neural_networks>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "convolutional neural networks" .
+
+untitled-ontology-2:Галузь_IT_Освіта
+        a                          untitled-ontology-2:Галузь_знань ;
+        untitled-ontology-2:назва  "IT Освіта" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_digital_teaching>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "digital teaching" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Interdisciplinary_Journal_of_Information_Knowledge_and_Management>
+        a                          untitled-ontology-2:Журнал ;
+        untitled-ontology-2:назва  "Interdisciplinary Journal of Information, Knowledge, and Management" .
+
+untitled-ontology-2:стаж
+        a            owl:DatatypeProperty ;
+        rdfs:domain  untitled-ontology-2:Науковець ;
+        rdfs:range   xsd:int .
+
+untitled-ontology-2:Рецензент
+        a                    owl:Class ;
+        rdfs:subClassOf      untitled-ontology-2:Науковець ;
+        owl:disjointWith     untitled-ontology-2:Стаття ;
+        owl:equivalentClass  [ a                   owl:Class ;
+                               owl:intersectionOf  ( untitled-ontology-2:Науковець
+                                                     [ a                   owl:Restriction ;
+                                                       owl:onProperty      untitled-ontology-2:рецензував ;
+                                                       owl:someValuesFrom  untitled-ontology-2:Наукова_Публікація
+                                                     ]
+                                                   )
+                             ] .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_learning_technologies>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "learning technologies" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_primary_school>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "primary school" .
+
+untitled-ontology-2:цитує
+        a       owl:ObjectProperty .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_21st_cen-_tury>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "21st cen- tury" .
+
+untitled-ontology-2:Наукова_Публікація
+        a                 owl:Class ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a                     rdfs:Datatype ;
+                                                 owl:onDatatype        xsd:dateTime ;
+                                                 owl:withRestrictions  ( [ xsd:minInclusive  "1900-01-01T00:00:00"^^xsd:dateTime ]
+                                                                         [ xsd:maxInclusive  "2025-12-31T23:59:59"^^xsd:dateTime ]
+                                                                       )
+                                               ] ;
+                            owl:onProperty     untitled-ontology-2:дата_публікації
+                          ] ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a                     rdfs:Datatype ;
+                                                 owl:onDatatype        xsd:int ;
+                                                 owl:withRestrictions  ( [ xsd:minExclusive  "1"^^xsd:int ]
+                                                                         [ xsd:maxExclusive  "1000"^^xsd:int ]
+                                                                       )
+                                               ] ;
+                            owl:onProperty     untitled-ontology-2:кількість_сторінок
+                          ] ;
+        rdfs:subClassOf   [ a                            owl:Restriction ;
+                            owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass                  untitled-ontology-2:Науковець ;
+                            owl:onProperty               untitled-ontology-2:маєАвтора
+                          ] ;
+        rdfs:subClassOf   [ a                            owl:Restriction ;
+                            owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass                  untitled-ontology-2:Галузь_знань ;
+                            owl:onProperty               untitled-ontology-2:належить_до_галузі_знань
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      untitled-ontology-2:маєАвтора ;
+                            owl:someValuesFrom  untitled-ontology-2:Науковець
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      untitled-ontology-2:назва ;
+                            owl:someValuesFrom  [ a                     rdfs:Datatype ;
+                                                  owl:onDatatype        xsd:string ;
+                                                  owl:withRestrictions  ( [ xsd:pattern  ".{3,255}" ]
+                                                                        )
+                                                ]
+                          ] ;
+        rdfs:subClassOf   [ a                            owl:Restriction ;
+                            owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                            owl:onDataRange              xsd:string ;
+                            owl:onProperty               untitled-ontology-2:мова
+                          ] ;
+        rdfs:subClassOf   [ a                   owl:Restriction ;
+                            owl:onProperty      untitled-ontology-2:має_рецензента ;
+                            owl:someValuesFrom  untitled-ontology-2:Науковець
+                          ] ;
+        owl:disjointWith  untitled-ontology-2:Посилання , untitled-ontology-2:Організація , untitled-ontology-2:Науковець .
+
+untitled-ontology-2:Ключове_Слово_Штучний_Інтелект
+        a           owl:NamedIndividual , untitled-ontology-2:Ключове_cлово ;
+        rdfs:label  "Ключове слово \"Штучний інтелект\"" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Наукова_Публікація_The_impact_of_generative_AI_tools_on_postgraduate_students_learning_experiences:_New_insights_into_usage_patterns>
+        a                              untitled-ontology-2:Стаття , untitled-ontology-2:Наукова_Публікація ;
+        untitled-ontology-2:дата_публікації
+                "2025-01-01T00:00:00"^^xsd:dateTime ;
+        untitled-ontology-2:кількість_авторів
+                2 ;
+        untitled-ontology-2:кількість_сторінок
+                29 ;
+        untitled-ontology-2:кількість_сторінок_на_автора
+                "14.5"^^xsd:double ;
+        untitled-ontology-2:маєАвтора  <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Shatha_Mohammed__Almalki> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Asmaa_Thaer_Aldulaijan> ;
+        untitled-ontology-2:мова       "English" ;
+        untitled-ontology-2:містить_ключове_слово
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_learning_experiences> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_postgraduate_students> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_ChatGPT> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_learning_technologies> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_generative_AI> , <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_innova-_tive_learning_activity> ;
+        untitled-ontology-2:назва      "The impact of generative AI tools on postgraduate students' learning experiences: New insights into usage patterns" ;
+        untitled-ontology-2:належить_до_галузі_знань
+                untitled-ontology-2:Галузь_Педагогіка , untitled-ontology-2:Галузь_IT_Освіта ;
+        untitled-ontology-2:опубліковано_в
+                <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Журнал_Journal_of_Information_Technology_Education:_Research> .
+
+untitled-ontology-2:Матеріали_AI_Конференція_2023
+        a           owl:NamedIndividual ;
+        rdfs:label  "Матеріали Ai Конференція 2023" .
+
+untitled-ontology-2:Галузь_Управління_знаннями
+        a                          untitled-ontology-2:Галузь_знань ;
+        untitled-ontology-2:назва  "Управління знаннями" .
+
+untitled-ontology-2:містить_ключове_слово
+        a            owl:ObjectProperty ;
+        rdfs:domain  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range   untitled-ontology-2:Ключове_cлово .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Gila_Cohen_Zilka>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Gila Cohen Zilka" .
+
+untitled-ontology-2:Ключове_cлово
+        a                 owl:Class ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a                     rdfs:Datatype ;
+                                                 owl:onDatatype        xsd:string ;
+                                                 owl:withRestrictions  ( [ xsd:pattern  ".{2,255}" ]
+                                                                       )
+                                               ] ;
+                            owl:onProperty     untitled-ontology-2:назва
+                          ] ;
+        owl:disjointWith  untitled-ontology-2:Конференція , untitled-ontology-2:Наукова_Публікація , untitled-ontology-2:Науковець , untitled-ontology-2:Організація , untitled-ontology-2:Посилання .
+
+untitled-ontology-2:Матеріали_DataScience_Форум_2024
+        a           owl:NamedIndividual ;
+        rdfs:label  "Матеріали Data Science Форум 2024" .
+
+untitled-ontology-2:Галузь_знань
+        a                 owl:Class ;
+        rdfs:subClassOf   [ a                  owl:Restriction ;
+                            owl:allValuesFrom  [ a                     rdfs:Datatype ;
+                                                 owl:onDatatype        xsd:string ;
+                                                 owl:withRestrictions  ( [ xsd:pattern  ".{2,255}" ]
+                                                                       )
+                                               ] ;
+                            owl:onProperty     untitled-ontology-2:назва
+                          ] ;
+        owl:disjointWith  untitled-ontology-2:Журнал , untitled-ontology-2:Ключове_cлово , untitled-ontology-2:Конференція , untitled-ontology-2:Наукова_Публікація , untitled-ontology-2:Науковець , untitled-ontology-2:Організація , untitled-ontology-2:Посилання .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_M_M_Munshi>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "M M Munshi" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_recurrent_neural_networks>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "recurrent neural networks" .
+
+untitled-ontology-2:Звіт_2024_Інститут_Фізики
+        a           owl:NamedIndividual ;
+        rdfs:label  "Звіт 2024 Інститут Фізики"@uk .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_personalized_IR>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "personalized IR" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_online_teaching_practices>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "online teaching practices" .
+
+untitled-ontology-2:Київський_Авіаційний_Інститут
+        a             owl:NamedIndividual , untitled-ontology-2:Організація ;
+        rdfs:comment  "An aviation institution of higher education in Kyiv, the successor of the National Aviation University (NAU), which was reorganized in 2024. The university enrolls 16,600 students from 55 countries worldwide. Its scientific and pedagogical schools provide training not only for engineering professionals but also for economists, lawyers, environmentalists, translators, psychologists, sociologists, and others.  \n\nThe educational process is supported by a scientific and teaching staff that includes 15 academicians and corresponding members of the National Academy of Sciences of Ukraine, 184 Doctors of Science, professors, and 677 Candidates of Science, associate professors. Specialists from airlines and industrial enterprises are also involved in the educational process. Among the faculty, there are 80 laureates of the State Prize and Honored Figures of Science and Technology."@en , "Авіаційний заклад вищої освіти в Києві, правонаступник Національного авіаційного університету (НАУ), реорганізованого в 2024 році. В університеті навчається 16,6 тисяч студентів із 55 країн світу. Науково-педагогічні школи дають можливість готувати не лише фахівців інженерного профілю, але й економістів, юристів, екологів, перекладачів, психологів, соціологів тощо. Навчальний процес забезпечує науково-педагогічний колектив, у складі якого 15 академіків та членів-кореспондентів НАН України, 184 докторів наук, професорів і 677 кандидатів наук, доцентів. До навчального процесу залучаються спеціалісти авіакомпаній і промислових підприємств. Серед викладачів — 80 лауреатів Державної премії та Заслужених діячів науки і техніки."@uk ;
+        rdfs:label    "Kyiv Aviation Institute"@en , "Київський авіаційний інститут"@uk .
+
+untitled-ontology-2:Галузь_Менеджмент
+        a                          untitled-ontology-2:Галузь_знань ;
+        untitled-ontology-2:назва  "Менеджмент" .
+
+untitled-ontology-2:Організація
+        a                 owl:Class ;
+        owl:disjointWith  untitled-ontology-2:Посилання .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_e-readiness>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "e-readiness" .
+
+untitled-ontology-2:назва
+        a            owl:DatatypeProperty ;
+        rdfs:domain  [ a            owl:Class ;
+                       owl:unionOf  ( untitled-ontology-2:Галузь_знань untitled-ontology-2:Журнал untitled-ontology-2:Ключове_cлово untitled-ontology-2:Наукова_Публікація )
+                     ] ;
+        rdfs:range   xsd:string .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#Журнал_Комп’ютерні_Науки>
+        a           owl:NamedIndividual , untitled-ontology-2:Журнал ;
+        rdfs:label  "Журнал \"Комп'ютерні науки\""@uk .
+
+untitled-ontology-2:Костенко_Наталія
+        a                               owl:NamedIndividual , untitled-ontology-2:Науковець , untitled-ontology-2:Рецензент ;
+        rdfs:label                      "Костенко Наталя"@uk ;
+        untitled-ontology-2:афілійовано_з
+                untitled-ontology-2:Київський_Авіаційний_Інститут ;
+        untitled-ontology-2:рецензував  untitled-ontology-2:Дисертація_Петренко_Біохімія ;
+        untitled-ontology-2:стаж        13 .
+
+untitled-ontology-2:має_рецензента
+        a              owl:ObjectProperty , owl:FunctionalProperty , owl:IrreflexiveProperty ;
+        rdfs:domain    untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range     untitled-ontology-2:Науковець ;
+        owl:inverseOf  untitled-ontology-2:рецензував .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_preservice_teacher>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "preservice teacher" .
+
+untitled-ontology-2:Галузь_Педагогіка
+        a                          untitled-ontology-2:Галузь_знань ;
+        untitled-ontology-2:назва  "Педагогіка" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Sanjay_V_Hanji>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Sanjay V Hanji" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_class_timing>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "class timing" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_academic_performance>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "academic performance" .
+
+untitled-ontology-2:Галузь_Інформаційні_системи
+        a                          untitled-ontology-2:Галузь_знань ;
+        untitled-ontology-2:назва  "Інформаційні системи" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Asmaa_Thaer_Aldulaijan>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Asmaa Thaer Aldulaijan" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_user_profile>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "user profile" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Shatha_Mohammed__Almalki>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Shatha Mohammed  Almalki" .
+
+untitled-ontology-2:представлено_на
+        a            owl:ObjectProperty , owl:FunctionalProperty , owl:AsymmetricProperty ;
+        rdfs:domain  untitled-ontology-2:Тези_конференції ;
+        rdfs:range   untitled-ontology-2:Конференція .
+
+untitled-ontology-2:кількість_сторінок_на_автора
+        a            owl:DatatypeProperty ;
+        rdfs:domain  untitled-ontology-2:Наукова_Публікація ;
+        rdfs:range   xsd:double .
+
+untitled-ontology-2:Петренко_Марина
+        a                               untitled-ontology-2:Науковець , untitled-ontology-2:Рецензент , owl:NamedIndividual ;
+        rdfs:comment                    "Видатна українська науковиця в галузі інформаційних технологій."@uk , "Prominent Ukrainian scientist in the field of information technology."@en ;
+        rdfs:label                      "Maryna Petrenko"@en , "Петренко Марина"@uk ;
+        untitled-ontology-2:афілійовано_з
+                untitled-ontology-2:Київський_Авіаційний_Інститут ;
+        untitled-ontology-2:рецензував  untitled-ontology-2:Дисертація_Іваненко_Штучний_Інтелект ;
+        untitled-ontology-2:стаж        21 .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_ChatGPT>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "ChatGPT" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Науковець_Stefano_Cuomo>
+        a                        untitled-ontology-2:Науковець ;
+        untitled-ontology-2:ПІБ  "Stefano Cuomo" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_healthcare_industry>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "healthcare industry" .
+
+<http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/Ключове_слово_innova-_tive_learning_activity>
+        a                          untitled-ontology-2:Ключове_cлово ;
+        untitled-ontology-2:назва  "innova- tive learning activity" .
