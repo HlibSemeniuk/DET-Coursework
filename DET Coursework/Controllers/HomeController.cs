@@ -1,4 +1,3 @@
-using AngleSharp.Io;
 using DET_Coursework.Models;
 using iText.Forms.Form.Element;
 using iText.Kernel.Pdf;
@@ -6,7 +5,6 @@ using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Layout.Element;
 using iText.StyledXmlParser.Jsoup.Internal;
-using Lucene.Net.Search;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -18,12 +16,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
-using VDS.RDF;
-using VDS.RDF.Parsing;
-using VDS.RDF.Query;
-using VDS.RDF.Query.Datasets;
-using VDS.RDF.Update;
-using VDS.RDF.Writing;
 using static iText.Kernel.Pdf.Colorspace.PdfSpecialCs;
 
 namespace DET_Coursework.Controllers
