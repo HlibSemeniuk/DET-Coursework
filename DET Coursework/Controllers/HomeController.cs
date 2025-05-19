@@ -6,6 +6,7 @@ using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Layout.Element;
 using iText.StyledXmlParser.Jsoup.Internal;
+using Lucene.Net.Search;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -35,23 +36,7 @@ namespace DET_Coursework.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(IFormFile pdfFile, string ontologyPath)
         {
-
-            if (!string.IsNullOrEmpty(ontologyPath))
-            {
-                using var httpClient = new HttpClient();
-                var content = new StringContent(ontologyPath, Encoding.UTF8, "text/plain");
-                var response = await httpClient.PostAsync("http://localhost:8081/path", content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                }
-                else
-                {
-                    string error = await response.Content.ReadAsStringAsync();
-                    return StatusCode((int)response.StatusCode, $"Java server error: {response.StatusCode}. Details: {error}");
-                }
-            }
+            await SendOntologyPathAsync(ontologyPath);
 
             if (pdfFile?.Length > 0 && pdfFile.ContentType == "application/pdf")
             {
@@ -84,33 +69,51 @@ namespace DET_Coursework.Controllers
         [HttpPost]
         public async Task<IActionResult> AllPublications(string ontologyPath)
         {
+            await SendOntologyPathAsync(ontologyPath);
+            var publications = await GetAllPublicationsAsync();
+            return View("AllPublications", publications);
+        }
 
 
-            if (!string.IsNullOrEmpty(ontologyPath))
+
+        private async Task SendOntologyPathAsync(string ontologyPath)
+        {
+            if (string.IsNullOrWhiteSpace(ontologyPath))
+                throw new ArgumentException("Шлях до онтології не може бути порожнім.", nameof(ontologyPath));
+
+            try
             {
                 using var httpClient = new HttpClient();
                 var content = new StringContent(ontologyPath, Encoding.UTF8, "text/plain");
+
                 var response = await httpClient.PostAsync("http://localhost:8081/path", content);
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Java server error: {(int)response.StatusCode} {response.ReasonPhrase}. Details: {error}");
                 }
-                else
-                {
-                    string error = await response.Content.ReadAsStringAsync();
-                    return StatusCode((int)response.StatusCode, $"Java server error: {response.StatusCode}. Details: {error}");
-                }
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Java server response: " + responseBody);
             }
-
-            var publications = await GetAllPublicationsAsync();
-
-            return View("AllPublications", publications);
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка під час надсилання шляху до онтології: " + ex.Message);
+                throw;
+            }
         }
 
         private async Task<List<PublicationInfo>> GetAllPublicationsAsync()
         {
-            string selectQuery = @"
+            string selectQuery = GetSelectQuery();
+            string responseJson = await SendSparqlQueryAsync("http://localhost:8081/selectAll", selectQuery);
+            return ParsePublicationInfoList(responseJson);
+        }
+
+        private string GetSelectQuery()
+        {
+            return @"
             PREFIX onto: <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2#>
             PREFIX inst: <http://www.semanticweb.org/user/ontologies/2025/1/untitled-ontology-2/individuals/>
             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -158,29 +161,35 @@ namespace DET_Coursework.Controllers
             GROUP BY ?публікація ?назва ?типНазва ?дата ?сторінок ?авторів ?сторінокНаАвтора ?мова ?журналНазва
             ORDER BY ?назва
             ";
+        }
 
+        private async Task<string> SendSparqlQueryAsync(string endpointUrl, string query)
+        {
             using var client = new HttpClient();
+            var content = new StringContent(query, Encoding.UTF8, "text/plain");
 
-            var content = new StringContent(selectQuery, Encoding.UTF8, "text/plain");
+            var response = await client.PostAsync(endpointUrl, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Java server error: {(int)response.StatusCode} {response.ReasonPhrase}. Details: {error}");
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Java server response: " + responseBody);
+            return responseBody;
+        }
+
+        private List<PublicationInfo> ParsePublicationInfoList(string json)
+        {
             try
             {
-                var response = await client.PostAsync("http://localhost:8081/selectAll", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Java server error: {(int)response.StatusCode} {response.ReasonPhrase}. Details: {error}");
-                }
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine("Java server response: " + responseBody);
-
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<PublicationInfo>>(json);
+                return JsonConvert.DeserializeObject<List<PublicationInfo>>(json) ?? new List<PublicationInfo>();
             }
-            catch (Exception ex)
+            catch (System.Text.Json.JsonException ex)
             {
-                Console.WriteLine("Exception occurred: " + ex.Message);
+                Console.WriteLine("JSON parse error: " + ex.Message);
                 throw;
             }
         }
@@ -188,29 +197,7 @@ namespace DET_Coursework.Controllers
         private async void AddToOntology(PublicationInfo info)
         {
             string insertQuery = BuildInsertQuery(info);
-
-            //виконуємо оновлення
-            using var client = new HttpClient();
-            var content = new StringContent(insertQuery, Encoding.UTF8, "text/plain");
-
-            try
-            {
-                var response = await client.PostAsync("http://localhost:8081/query", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Java server error: {(int)response.StatusCode} {response.ReasonPhrase}. Details: {error}");
-                }
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine("Java server response: " + responseBody);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occurred: " + ex.Message);
-                throw;
-            }
+            await SendSparqlQueryAsync("http://localhost:8081/query", insertQuery);
         }
 
         private string BuildInsertQuery(PublicationInfo info)
